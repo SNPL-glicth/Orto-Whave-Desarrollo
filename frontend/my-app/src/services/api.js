@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Crear una instancia de axios con la configuración base
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api', // URL base del backend
+  baseURL: 'http://localhost:4000', // URL base del backend actualizada
   timeout: 5000, // timeout de 5 segundos
   headers: {
     'Content-Type': 'application/json',
@@ -29,21 +29,63 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+    if (error.response) {
+      // El servidor respondió con un código de estado fuera del rango 2xx
+      if (error.response.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
+      return Promise.reject({
+        ...error,
+        message: error.response.data.message || 'Error en la solicitud'
+      });
+    } else if (error.request) {
+      // La solicitud se realizó pero no se recibió respuesta
+      return Promise.reject({
+        ...error,
+        message: 'No se pudo conectar con el servidor'
+      });
+    } else {
+      // Algo sucedió en la configuración de la solicitud
+      return Promise.reject({
+        ...error,
+        message: 'Error al procesar la solicitud'
+      });
     }
-    return Promise.reject(error);
   }
 );
 
 export const authService = {
-  login: (credentials) => api.post('/auth/login', credentials),
-  register: (userData) => api.post('/auth/register', userData),
+  login: async (credentials) => {
+    try {
+      const response = await api.post('/auth/login', credentials);
+      if (response.data.access_token) {
+        localStorage.setItem('token', response.data.access_token);
+      }
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  register: async (userData) => {
+    try {
+      const response = await api.post('/auth/register', userData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   createUser: (userData) => api.post('/auth/users', userData),
   verifyEmail: (code) => api.get(`/auth/verify?code=${code}`),
   resendVerification: (email) => api.post('/auth/resend-verification', { email }),
-  getCurrentUser: () => api.get('/auth/me'),
+  getCurrentUser: async () => {
+    try {
+      const response = await api.get('/auth/me');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export const userService = {

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '../services/api';
+import { authService } from '../services/api';
 import { toast } from 'react-hot-toast';
 
 const AuthContext = createContext(null);
@@ -22,8 +22,8 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await api.get('/auth/me');
-          setUser(response.data);
+          const userData = await authService.getCurrentUser();
+          setUser(userData);
         } catch (error) {
           console.error('Error al verificar autenticación:', error);
           localStorage.removeItem('token');
@@ -37,25 +37,32 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await api.post('/auth/login', { email, password });
-      const { token, email: userEmail, role, redirectUrl, success, message } = response.data;
+      const response = await authService.login({ email, password });
       
-      if (!success) {
-        toast.error(message);
-        throw new Error(message);
+      if (response.access_token) {
+        localStorage.setItem('token', response.access_token);
+        setUser(response.user);
+        
+        // Determinar la URL de redirección basada en el rol
+        let redirectUrl = '/dashboard';
+        const userRole = response.user.rol?.toLowerCase();
+        
+        if (userRole === 'administrador') {
+          redirectUrl = '/admin/dashboard';
+        } else if (userRole === 'doctor') {
+          redirectUrl = '/doctor/dashboard';
+        } else if (userRole === 'paciente') {
+          redirectUrl = '/patient/dashboard';
+        }
+        
+        toast.success('¡Inicio de sesión exitoso!');
+        return { ...response, redirectUrl };
+      } else {
+        throw new Error('No se recibió el token de autenticación');
       }
-
-      localStorage.setItem('token', token);
-      setUser({ 
-        email: userEmail, 
-        role,
-        redirectUrl 
-      });
-      
-      toast.success(message || '¡Inicio de sesión exitoso!');
     } catch (error) {
       console.error('Error en login:', error);
-      const message = error.response?.data?.message || 'Error al iniciar sesión. Por favor verifica tus credenciales.';
+      const message = error.message || 'Error al iniciar sesión. Por favor verifica tus credenciales.';
       toast.error(message);
       throw error;
     }
@@ -63,12 +70,12 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await api.post('/auth/register', userData);
+      const response = await authService.register(userData);
       toast.success('¡Registro exitoso! Por favor inicia sesión.');
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Error en registro:', error);
-      const message = error.response?.data?.message || 'Error al registrarse';
+      const message = error.message || 'Error al registrarse';
       toast.error(message);
       throw error;
     }
@@ -82,7 +89,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateProfile = async (userData) => {
     try {
-      const response = await api.put('/auth/profile', userData);
+      const response = await authService.updateProfile(userData);
       setUser(response.data);
       toast.success('Perfil actualizado exitosamente');
       return response.data;

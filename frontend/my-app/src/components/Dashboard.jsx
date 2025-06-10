@@ -9,16 +9,16 @@ const Dashboard = () => {
   useEffect(() => {
     if (user) {
       // Eliminar el prefijo 'ROLE_' del rol si existe
-      const role = user.role.replace('ROLE_', '');
+      const userRole = user.rol?.replace('ROLE_', '').toLowerCase();
       
-      switch (role) {
-        case 'ADMIN':
+      switch (userRole) {
+        case 'admin':
           navigate('/admin/dashboard');
           break;
-        case 'DOCTOR':
+        case 'doctor':
           navigate('/doctor/dashboard');
           break;
-        case 'PATIENT':
+        case 'patient':
           navigate('/patient/dashboard');
           break;
         default:

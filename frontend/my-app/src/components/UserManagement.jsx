@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { PencilIcon, TrashIcon, UserPlusIcon, MagnifyingGlassIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import CreateUserForm from './CreateUserForm';
 import { useAuth } from '../context/AuthContext';
+import { userService } from '../services/api';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -24,95 +25,18 @@ const UserManagement = () => {
     birthDate: ''
   });
 
-  // Definir fetchData antes de usarla en useEffect
-  const fetchData = async () => {
-    setLoading(true);
-    
+  const fetchUsers = async () => {
     try {
-      // Obtener usuarios desde el backend
-      const response = await fetch('http://localhost:8080/api/users', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      
-      if (response.ok) {
-        const userData = await response.json();
-        setUsers(userData);
-        
-        // Convertir usuarios a pacientes para la tabla
-        const patientsData = userData.map(user => ({
-          id: user.id,
-          firstName: user.firstName || '',
-          lastName: user.lastName || '',
-          email: user.email || '',
-          documentId: user.documentId || '',
-          documentType: user.documentType || 'CC',
-          phone: user.phone || '',
-          role: user.role || 'ROLE_USER',
-          appointments: user.appointments || []
-        }));
-        
-        setPatients(patientsData);
-      } else {
-        console.error('Error al obtener usuarios');
-        loadMockData(); // Cargar datos de ejemplo si hay error
-      }
+      const response = await userService.getUsers();
+      setUsers(response.data);
     } catch (error) {
       console.error('Error al obtener usuarios:', error);
-      loadMockData(); // Cargar datos de ejemplo si hay error
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    fetchUsers();
   }, []);
-
-  // Función para cargar datos de ejemplo cuando hay error de conexión
-  const loadMockData = () => {
-    // Usuario administrador predefinido
-    const adminUser = {
-      id: 1,
-      firstName: 'Admin',
-      lastName: 'OWC',
-      email: 'admin@ortowhave.com',
-      role: 'ROLE_ADMIN',
-      active: true,
-      createdAt: '2023-01-01'
-    };
-    
-    // Usuario doctor predefinido
-    const doctorUser = {
-      id: 2,
-      firstName: 'Doctor',
-      lastName: 'Ejemplo',
-      email: 'doctor@orthowave.co',
-      role: 'ROLE_DOCTOR',
-      active: true,
-      createdAt: '2023-01-15'
-    };
-    
-    const mockUsers = [
-      adminUser,
-      doctorUser,
-      {
-        id: 3,
-        firstName: 'Paciente',
-        lastName: 'Ejemplo',
-        email: 'paciente@ejemplo.com',
-        documentId: '5678901234',
-        documentType: 'CC',
-        phone: '3005678901',
-        role: 'ROLE_USER',
-        appointments: []
-      }
-    ];
-    
-    setUsers(mockUsers);
-    setPatients(mockUsers);
-  };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -140,22 +64,12 @@ const UserManagement = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-      try {
-        const response = await fetch(`http://localhost:8080/api/users/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        
-        if (response.ok) {
-          setPatients(patients.filter(patient => patient.id !== id));
-        }
-      } catch (error) {
-        console.error('Error al eliminar usuario:', error);
-      }
+  const deleteUser = async (id) => {
+    try {
+      await userService.deleteUser(id);
+      fetchUsers(); // Recargar la lista después de eliminar
+    } catch (error) {
+      console.error('Error al eliminar usuario:', error);
     }
   };
 
@@ -167,26 +81,21 @@ const UserManagement = () => {
     });
   };
 
+  const updateUser = async (userData) => {
+    try {
+      await userService.updateUser(selectedUser.id, userData);
+      fetchUsers(); // Recargar la lista después de actualizar
+    } catch (error) {
+      console.error('Error al actualizar usuario:', error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      const response = await fetch(`http://localhost:8080/api/users/${selectedUser.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(formData)
-      });
-      
-      if (response.ok) {
-        const updatedUser = await response.json();
-        setUsers(users.map(user => 
-          user.id === selectedUser.id ? updatedUser : user
-        ));
-        setIsModalOpen(false);
-      }
+      await updateUser(formData);
+      setIsModalOpen(false);
     } catch (error) {
       console.error('Error al actualizar usuario:', error);
     }
@@ -194,7 +103,7 @@ const UserManagement = () => {
 
   const handleUserCreated = (newUser) => {
     setUsers([...users, newUser]);
-    fetchData(); // Recargar la lista de usuarios
+    fetchUsers(); // Recargar la lista de usuarios
   };
 
   return (
@@ -203,7 +112,7 @@ const UserManagement = () => {
         <h1 className="text-2xl font-bold text-gray-800">Gestión de Usuarios</h1>
         <div className="flex space-x-2">
         <button 
-          onClick={fetchData}
+          onClick={fetchUsers}
           className="flex items-center text-primary hover:text-primary-dark"
         >
           <ArrowPathIcon className="h-5 w-5 mr-1" />
@@ -308,7 +217,7 @@ const UserManagement = () => {
                         <PencilIcon className="h-5 w-5" />
                       </button>
                       <button
-                        onClick={() => handleDelete(patient.id)}
+                        onClick={() => deleteUser(patient.id)}
                         className="text-red-600 hover:text-red-900"
                       >
                         <TrashIcon className="h-5 w-5" />

@@ -18,10 +18,10 @@ const ProtectedRoute = ({ children, requiredRole }) => {
   }
 
   // Si se especifica un rol requerido, verificar que el usuario tenga ese rol
-  if (requiredRole && user.role.replace('ROLE_', '') !== requiredRole) {
+  if (requiredRole && user.rol?.replace('ROLE_', '').toLowerCase() !== requiredRole.toLowerCase()) {
     // Si el usuario no tiene el rol requerido, redirigir a su dashboard correspondiente
-    const role = user.role.replace('ROLE_', '');
-    return <Navigate to={`/${role.toLowerCase()}/dashboard`} />;
+    const userRole = user.rol?.replace('ROLE_', '').toLowerCase();
+    return <Navigate to={`/${userRole}/dashboard`} />;
   }
 
   return children;
