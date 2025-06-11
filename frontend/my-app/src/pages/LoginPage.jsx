@@ -16,15 +16,65 @@ const LoginPage = () => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
-    
+
     try {
+      // Validaciones más detalladas
+      if (!email.trim()) {
+        throw new Error('El correo electrónico es requerido');
+      }
+
+      if (!password.trim()) {
+        throw new Error('La contraseña es requerida');
+      }
+
+      if (!email.includes('@') || !email.includes('.')) {
+        throw new Error('Por favor, ingresa un correo electrónico válido');
+      }
+
+      if (password.length < 6) {
+        throw new Error('La contraseña debe tener al menos 6 caracteres');
+      }
+
+      console.log('Iniciando proceso de login con:', { email });
+      
+      // Limpiar cualquier error previo
+      localStorage.removeItem('auth_error');
+      
       const response = await login(email, password);
-      navigate(response.redirectUrl || '/dashboard');
-    } catch (err) {
-      setError(err.message || 'Error al iniciar sesión. Por favor verifica tus credenciales.');
+      console.log('Login exitoso, respuesta:', { 
+        hasUser: !!response.user,
+        userRole: response.user?.rol
+      });
+
+      if (!response.user || !response.user.rol) {
+        throw new Error('Error: Respuesta de login inválida');
+      }
+
+      // Determinar la ruta según el rol
+      const redirectPath = getRedirectPathByRole(response.user.rol);
+      console.log('Redirigiendo a:', redirectPath);
+      
+      // Si todo está bien, redirigir
+      navigate(redirectPath);
+    } catch (error) {
+      console.error('Error en el formulario de login:', error);
+      
+      // Guardar el error para referencia futura
+      localStorage.setItem('auth_error', 'true');
+      
+      setError(error.message || 'Error al iniciar sesión. Por favor, intenta de nuevo.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getRedirectPathByRole = (rol) => {
+    const rolePaths = {
+      'administrador': '/dashboard/admin',
+      'doctor': '/dashboard/doctor',
+      'paciente': '/dashboard/patient'
+    };
+    return rolePaths[rol.toLowerCase()] || '/login';
   };
 
   return (
@@ -111,7 +161,11 @@ const LoginPage = () => {
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors"
                   placeholder="tu@email.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError(''); // Limpiar error al escribir
+                  }}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -132,7 +186,11 @@ const LoginPage = () => {
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors"
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError(''); // Limpiar error al escribir
+                  }}
+                  disabled={isLoading}
                 />
               </div>
             </div>

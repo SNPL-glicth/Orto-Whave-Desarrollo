@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import App from './App.tsx';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -16,9 +16,11 @@ root.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-// Limpiar localStorage al iniciar la aplicación para evitar problemas de autenticación
-if (window.location.pathname === '/login' || window.location.pathname === '/register') {
-  console.log('Limpiando localStorage para evitar problemas de autenticación');
+// Solo limpiar localStorage si no hay un token válido o si hay un error de autenticación
+if ((window.location.pathname === '/login' || window.location.pathname === '/register') && 
+    (!localStorage.getItem('token') || localStorage.getItem('auth_error'))) {
+  console.log('Limpiando localStorage debido a falta de token o error de autenticación');
   localStorage.removeItem('token');
   localStorage.removeItem('user');
+  localStorage.removeItem('auth_error');
 }

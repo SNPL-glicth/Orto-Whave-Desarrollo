@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
+      console.log('Iniciando login con:', email);
       const response = await authService.login({ email, password });
       
       if (response.access_token) {
@@ -48,12 +49,18 @@ export const AuthProvider = ({ children }) => {
         const userRole = response.user.rol?.toLowerCase();
         
         if (userRole === 'administrador') {
-          redirectUrl = '/admin/dashboard';
+          redirectUrl = '/dashboard/admin';
         } else if (userRole === 'doctor') {
-          redirectUrl = '/doctor/dashboard';
+          redirectUrl = '/dashboard/doctor';
         } else if (userRole === 'paciente') {
-          redirectUrl = '/patient/dashboard';
+          redirectUrl = '/dashboard/patient';
         }
+        
+        console.log('Login exitoso:', {
+          user: response.user,
+          redirectUrl,
+          token: response.access_token.substring(0, 20) + '...'
+        });
         
         toast.success('¡Inicio de sesión exitoso!');
         return { ...response, redirectUrl };
@@ -62,6 +69,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Error en login:', error);
+      localStorage.removeItem('token'); // Limpiar token en caso de error
       const message = error.message || 'Error al iniciar sesión. Por favor verifica tus credenciales.';
       toast.error(message);
       throw error;
