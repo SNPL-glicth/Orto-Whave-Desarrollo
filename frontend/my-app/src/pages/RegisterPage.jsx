@@ -38,10 +38,19 @@ const RegisterPage = () => {
       setError('Las contraseñas no coinciden');
       return;
     }
+                                                                                                                                                                                                                                                                                                                                             
+                                                                                                                                                  // Transformar los nombres de los campos al formato que espera el backend
+    const userData = {                          
+      nombre: formData.firstName,                                       
+      apellido: formData.lastName,
+      email: formData.email,
+      telefono: formData.phone,
+      password: formData.password
+    };
 
     try {
-      await register(formData);
-      navigate('/login');
+      await register(userData);
+      navigate('/verify', { state: { email: userData.email } });
     } catch (err) {
       setError('Error al registrar usuario. Por favor intente nuevamente.');
     }

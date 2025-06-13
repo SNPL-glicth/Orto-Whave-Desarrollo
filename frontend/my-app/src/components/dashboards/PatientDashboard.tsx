@@ -155,6 +155,28 @@ export const PatientDashboard: React.FC = () => {
 
       <div className="py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Información personal del paciente */}
+          <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+            <h2 className="text-xl font-bold mb-4 text-primary">Mi Información Personal</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <span className="font-semibold">Nombre:</span> {user?.nombre}
+              </div>
+              <div>
+                <span className="font-semibold">Apellido:</span> {user?.apellido}
+              </div>
+              <div>
+                <span className="font-semibold">Correo:</span> {user?.email}
+              </div>
+              <div>
+                <span className="font-semibold">Teléfono:</span> {user?.telefono || 'No registrado'}
+              </div>
+              <div className="sm:col-span-2">
+                <span className="font-semibold">Dirección:</span> {user?.direccion || 'No registrada'}
+              </div>
+            </div>
+          </div>
+
           {activeTab === 'inicio' && (
             <div>
               <div className="flex justify-between items-center mb-6">

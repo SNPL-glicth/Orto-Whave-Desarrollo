@@ -9,6 +9,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<any>;
   logout: () => void;
   isAuthenticated: boolean;
+  verifyCode: (email: string, code: string) => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -96,13 +97,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     authService.logout();
   };
 
+  const verifyCode = async (email: string, code: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await authService.verifyCode(email, code);
+      return response;
+    } catch (err) {
+      console.error('Error en verificación:', err);
+      setError(err instanceof Error ? err.message : 'Error desconocido');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const value = {
     user,
     loading,
     error,
     login,
     logout,
-    isAuthenticated
+    isAuthenticated,
+    verifyCode
   };
 
   if (loading) {

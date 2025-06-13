@@ -1,20 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('roles')
 export class Role {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true, nullable: false })
+  @Column()
   nombre: string;
 
-  @Column({ name: 'activo', default: true })
+  @Column({ default: true })
   activo: boolean;
 
-  @Column({ 
-    name: 'fecha_creacion',
-    type: 'timestamp', 
-    default: () => 'CURRENT_TIMESTAMP' 
-  })
+  @Column({ name: 'fecha_creacion', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   fechaCreacion: Date;
+
+  @OneToMany(() => User, user => user.rol)
+  usuarios: User[];
 } 

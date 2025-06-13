@@ -6,7 +6,7 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -21,7 +21,7 @@ export class User {
   @Column({ nullable: true })
   telefono: string;
 
-  @Column({ nullable: true, type: 'text' })
+  @Column({ nullable: true })
   direccion: string;
 
   @Column({ name: 'rol_id' })
@@ -33,4 +33,10 @@ export class User {
 
   @Column({ name: 'fecha_creacion', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   fechaCreacion: Date;
+
+  @Column({ default: false })
+  isVerified: boolean;
+
+  @Column({ nullable: true, length: 10 })
+  verificationCode: string;
 } 

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authService } from '../services/api';
+import { authService } from '../services/auth.service.js';
 import { toast } from 'react-hot-toast';
 
 const AuthContext = createContext(null);
@@ -19,15 +19,9 @@ export const AuthProvider = ({ children }) => {
   // Verificar el token al cargar la aplicación
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const userData = await authService.getCurrentUser();
-          setUser(userData);
-        } catch (error) {
-          console.error('Error al verificar autenticación:', error);
-          localStorage.removeItem('token');
-        }
+      const currentUser = authService.getCurrentUser();
+      if (currentUser) {
+        setUser(currentUser);
       }
       setLoading(false);
     };
@@ -38,10 +32,9 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       console.log('Iniciando login con:', email);
-      const response = await authService.login({ email, password });
+      const response = await authService.login(email, password);
       
       if (response.access_token) {
-        localStorage.setItem('token', response.access_token);
         setUser(response.user);
         
         // Determinar la URL de redirección basada en el rol
@@ -69,7 +62,6 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Error en login:', error);
-      localStorage.removeItem('token'); // Limpiar token en caso de error
       const message = error.message || 'Error al iniciar sesión. Por favor verifica tus credenciales.';
       toast.error(message);
       throw error;
@@ -79,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const response = await authService.register(userData);
-      toast.success('¡Registro exitoso! Por favor inicia sesión.');
+      toast.success('¡Registro exitoso! Por favor revisa tu correo para verificar tu cuenta.');
       return response;
     } catch (error) {
       console.error('Error en registro:', error);
@@ -90,17 +82,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    authService.logout();
     setUser(null);
-    toast.success('Sesión cerrada exitosamente');
   };
 
   const updateProfile = async (userData) => {
     try {
-      const response = await authService.updateProfile(userData);
-      setUser(response.data);
-      toast.success('Perfil actualizado exitosamente');
-      return response.data;
+      // TODO: Implementar actualización de perfil cuando esté disponible en el backend
+      toast.error('La actualización de perfil no está disponible en este momento');
+      throw new Error('La actualización de perfil no está disponible en este momento');
     } catch (error) {
       console.error('Error al actualizar perfil:', error);
       const message = error.response?.data?.message || 'Error al actualizar perfil';

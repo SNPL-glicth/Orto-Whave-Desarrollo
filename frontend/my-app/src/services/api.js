@@ -1,4 +1,4 @@
-import axios from 'axios';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                import axios from 'axios';
 
 // Crear una instancia de axios con la configuración base
 const api = axios.create({
@@ -54,39 +54,6 @@ api.interceptors.response.use(
     }
   }
 );
-
-export const authService = {
-  login: async (credentials) => {
-    try {
-      const response = await api.post('/auth/login', credentials);
-      if (response.data.access_token) {
-        localStorage.setItem('token', response.data.access_token);
-      }
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  register: async (userData) => {
-    try {
-      const response = await api.post('/auth/register', userData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  createUser: (userData) => api.post('/auth/users', userData),
-  verifyEmail: (code) => api.get(`/auth/verify?code=${code}`),
-  resendVerification: (email) => api.post('/auth/resend-verification', { email }),
-  getCurrentUser: async () => {
-    try {
-      const response = await api.get('/auth/me');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-};
 
 export const userService = {
   getUsers: () => api.get('/usuarios'),

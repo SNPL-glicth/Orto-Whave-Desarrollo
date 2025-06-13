@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from './api';
 
 const API_URL = 'http://localhost:4000';
 
@@ -13,23 +13,19 @@ export interface LoginResponse {
   };
 }
 
+export interface VerifyResponse {
+  message: string;
+  verified: boolean;
+}
+
 export const authService = {
   async login(email: string, password: string): Promise<LoginResponse> {
     try {
       console.log('Iniciando solicitud de login con:', { email });
       
-      // Verificar que la URL de la API esté correcta
-      console.log('URL de la API:', `${API_URL}/auth/login`);
-
-      const response = await axios.post(`${API_URL}/auth/login`, {
+      const response = await api.post('/auth/login', {
         email,
         password,
-      }, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        }
       });
       
       // Log de la respuesta completa (sin datos sensibles)
@@ -162,5 +158,20 @@ export const authService = {
       isAuthenticated: isAuth
     });
     return isAuth;
+  },
+
+  async verifyCode(email: string, code: string): Promise<VerifyResponse> {
+    try {
+      const response = await api.post('/auth/verify', { email, code });
+      return response.data;
+    } catch (error: any) {
+      if (error.response) {
+        throw new Error(error.response.data?.message || 'Error en la verificación');
+      } else if (error.request) {
+        throw new Error('No se pudo conectar con el servidor. Verifica tu conexión a internet.');
+      } else {
+        throw new Error('Error al procesar la solicitud: ' + error.message);
+      }
+    }
   },
 }; 
