@@ -10,6 +10,13 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    font-size: 16px;
+  }
+  
+  @media (max-width: 640px) {
+    html {
+      font-size: 14px;
+    }
   }
   
   body {
@@ -20,30 +27,70 @@
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
     font-family: 'Playfair Display', serif;
   }
+
+  /* Estilos base responsivos */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Mejorar la legibilidad en móviles */
+  p {
+    @apply leading-relaxed;
+  }
+
+  /* Ajustar espaciado en móviles */
+  section {
+    @apply py-8 sm:py-12 md:py-16;
+  }
+
+  /* Mejorar la usabilidad de botones en móviles */
+  button, 
+  a {
+    @apply touch-manipulation;
+  }
 }
 
 /* Componentes personalizados */
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-primary text-white rounded-xl font-medium transition-all duration-300 hover:bg-accent;
+    @apply px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-primary text-white rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover:bg-accent;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 border-2 border-primary text-primary rounded-xl font-medium transition-all duration-300 hover:bg-primary hover:text-white;
+    @apply px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base border-2 border-primary text-primary rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover:bg-primary hover:text-white;
   }
 
   .nav-link {
-    @apply text-gray-600 hover:text-primary transition-colors duration-300;
+    @apply text-sm sm:text-base text-gray-600 hover:text-primary transition-colors duration-300;
   }
 
   .container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Nuevos componentes responsivos */
+  .card {
+    @apply bg-white rounded-lg sm:rounded-xl shadow-lg overflow-hidden;
+  }
+
+  .input-field {
+    @apply w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary;
+  }
+
+  .section-title {
+    @apply text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6;
+  }
+
+  .section-subtitle {
+    @apply text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto;
   }
 }
 
@@ -278,4 +325,28 @@
 
 .offcanvas-calendar .has-appointments {
   font-weight: 600;
+}
+
+/* Mejorar la experiencia táctil en móviles */
+@media (hover: none) {
+  .hover-only {
+    display: none;
+  }
+}
+
+/* Ajustar el calendario para móviles */
+@media (max-width: 640px) {
+  .react-calendar {
+    font-size: 14px;
+  }
+
+  .react-calendar__tile {
+    padding: 8px 0;
+  }
+
+  .calendar-full-view .react-calendar__tile {
+    height: 100px;
+    font-size: 14px;
+    padding: 8px;
+  }
 }

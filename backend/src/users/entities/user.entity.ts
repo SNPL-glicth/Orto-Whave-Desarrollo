@@ -34,9 +34,9 @@ export class User {
   @Column({ name: 'fecha_creacion', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   fechaCreacion: Date;
 
-  @Column({ default: false })
+  @Column({ name: 'is_verified', default: false })
   isVerified: boolean;
 
-  @Column({ nullable: true, length: 10 })
+  @Column({ name: 'verification_code', nullable: true, length: 10 })
   verificationCode: string;
 } 

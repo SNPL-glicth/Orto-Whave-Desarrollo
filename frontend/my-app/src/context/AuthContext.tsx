@@ -20,13 +20,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const mapRoleToValidRole = (rol: string): 'admin' | 'doctor' | 'paciente' => {
+  const mapRoleToValidRole = (rol: string): 'administrador' | 'doctor' | 'paciente' => {
     switch (rol.toLowerCase()) {
-      case 'admin':
       case 'administrador':
-        return 'admin';
+        return 'administrador';
       case 'doctor':
-      case 'medico':
         return 'doctor';
       default:
         return 'paciente';

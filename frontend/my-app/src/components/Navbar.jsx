@@ -114,7 +114,7 @@ const NavbarBase = () => {
       return (
         <div className="flex items-center">
           <Link
-            to={user?.role === 'ROLE_ADMIN' ? '/dashboard' : (user?.role === 'ROLE_DOCTOR' ? '/doctor-dashboard' : '/profile')}
+            to={user?.role === 'administrador' ? '/dashboard/admin' : (user?.role === 'doctor' ? '/dashboard/doctor' : '/dashboard/patient')}
             className="flex items-center text-gray-700 hover:text-primary transition-colors"
           >
             <UserIcon className="h-6 w-6 mr-1" />
@@ -184,9 +184,25 @@ const NavbarBase = () => {
               <img
                 src="/images/White logo - no background_page-0001.webp"
                 alt="OWC Orthowave Colombia"
-                className="h-12 w-auto"
+                className="h-10 w-auto sm:h-12"
               />
             </Link>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="flex md:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none"
+              aria-expanded="false"
+            >
+              <span className="sr-only">Abrir menú principal</span>
+              {isOpen ? (
+                <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+              ) : (
+                <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+              )}
+            </button>
           </div>
 
           {/* Desktop Navigation */}
@@ -214,7 +230,7 @@ const NavbarBase = () => {
           </div>
 
           {/* User and Cart Icons */}
-          <div className="flex items-center ml-auto">
+          <div className="hidden md:flex items-center ml-auto">
             <div className="flex items-center space-x-4 mr-6">
               {renderAuthButtons()}
               
@@ -237,7 +253,7 @@ const NavbarBase = () => {
                   {isCartOpen && (
                     <motion.div
                       ref={cartRef}
-                      className="absolute right-0 mt-2 w-96 bg-white rounded-none shadow-xl"
+                      className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-none shadow-xl"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
@@ -322,29 +338,6 @@ const NavbarBase = () => {
                 </AnimatePresence>
               </div>
             </div>
-
-            {/* Call-to-action button */}
-            <a
-              href="#contacto"
-              onClick={(e) => scrollToSection(e, '#contacto')}
-              className="hidden md:block uppercase tracking-wider px-5 py-1.5 text-sm font-medium transition-all duration-300 text-white bg-primary hover:bg-primary-dark"
-            >
-              Agenda tu Cita
-            </a>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="flex items-center space-x-2 md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-none text-gray-700 hover:text-primary focus:outline-none"
-            >
-              {isOpen ? (
-                <XMarkIcon className="block h-6 w-6" />
-              ) : (
-                <Bars3Icon className="block h-6 w-6" />
-              )}
-            </button>
           </div>
         </div>
       </div>
@@ -353,20 +346,19 @@ const NavbarBase = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            className="md:hidden"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden overflow-hidden"
           >
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-100">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-white shadow-lg">
               {navigation.map((item) => (
                 item.href.includes('#') ? (
                   <a
                     key={item.name}
                     href={item.href}
                     onClick={(e) => scrollToSection(e, item.href)}
-                    className="text-gray-700 uppercase tracking-wider hover:text-primary block px-3 py-2 text-sm font-medium transition-colors"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
                   >
                     {item.name}
                   </a>
@@ -374,79 +366,69 @@ const NavbarBase = () => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className="text-gray-700 uppercase tracking-wider hover:text-primary block px-3 py-2 text-sm font-medium transition-colors"
-                    onClick={() => setIsOpen(false)}
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
                   >
                     {item.name}
                   </Link>
                 )
               ))}
               
-              <div className="py-4 px-2 border-t border-gray-200">
+              {/* Mobile auth buttons */}
+              <div className="pt-4 pb-3 border-t border-gray-200">
                 {isAuthenticated ? (
-                  <div className="flex flex-col space-y-2">
+                  <div className="space-y-2">
                     <Link
-                      to={user?.role === 'ROLE_ADMIN' ? '/dashboard' : (user?.role === 'ROLE_DOCTOR' ? '/doctor-dashboard' : '/profile')}
-                      className="flex items-center text-gray-700 hover:text-primary px-3 py-2 uppercase tracking-wider"
+                      to={user?.role === 'administrador' ? '/dashboard/admin' : (user?.role === 'doctor' ? '/dashboard/doctor' : '/dashboard/patient')}
+                      className="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
                       onClick={() => setIsOpen(false)}
                     >
-                      <UserIcon className="h-5 w-5 mr-2" />
-                      Mi cuenta
+                      <UserIcon className="h-6 w-6 mr-2" />
+                      {user?.firstName || 'Mi cuenta'}
                     </Link>
                     <button
                       onClick={() => {
                         logout(navigate);
                         setIsOpen(false);
                       }}
-                      className="flex items-center text-gray-700 hover:text-primary px-3 py-2 uppercase tracking-wider"
+                      className="flex items-center w-full px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
                     >
-                      <ArrowRightOnRectangleIcon className="h-5 w-5 mr-2" />
-                      Cerrar sesión
+                      <ArrowRightOnRectangleIcon className="h-6 w-6 mr-2" />
+                      Salir
                     </button>
                   </div>
                 ) : (
-                  <div className="flex flex-col space-y-2">
+                  <div className="space-y-2">
                     <Link
                       to="/login"
-                      className="text-primary border-b-2 border-primary hover:bg-primary/10 uppercase tracking-wider block w-full text-center px-3 py-2 text-sm font-medium transition-colors"
-                      onClick={() => {
-                        setIsOpen(false);
-                        setTimeout(() => {
-                          window.scrollTo({
-                            top: 0,
-                            behavior: 'instant'
-                          });
-                        }, 100);
-                      }}
+                      className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
+                      onClick={() => setIsOpen(false)}
                     >
                       Iniciar sesión
                     </Link>
                     <Link
                       to="/register"
-                      className="bg-primary text-white hover:bg-primary-dark uppercase tracking-wider block w-full text-center px-3 py-2 text-sm font-medium transition-colors"
-                      onClick={() => {
-                        setIsOpen(false);
-                        setTimeout(() => {
-                          window.scrollTo({
-                            top: 0,
-                            behavior: 'instant'
-                          });
-                        }, 100);
-                      }}
+                      className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
+                      onClick={() => setIsOpen(false)}
                     >
                       Crear cuenta
                     </Link>
                   </div>
                 )}
               </div>
-              
-              <a
-                href="#contacto"
-                onClick={(e) => scrollToSection(e, '#contacto')}
-                className="bg-primary text-white hover:bg-primary-dark uppercase tracking-wider block w-full text-center mt-2 px-3 py-2 text-sm font-medium transition-colors"
-              >
-                Agenda tu Cita
-              </a>
+
+              {/* Mobile cart button */}
+              <div className="pt-2 pb-3 border-t border-gray-200">
+                <button
+                  onClick={() => {
+                    setIsCartOpen(!isCartOpen);
+                    setIsOpen(false);
+                  }}
+                  className="flex items-center w-full px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
+                >
+                  <ShoppingCartIcon className="h-6 w-6 mr-2" />
+                  Carrito ({getCartCount()})
+                </button>
+              </div>
             </div>
           </motion.div>
         )}

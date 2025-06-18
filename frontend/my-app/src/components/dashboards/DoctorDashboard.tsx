@@ -260,4 +260,6 @@ export const DoctorDashboard: React.FC = () => {
       <UserOffcanvas show={showOffcanvas} onClose={() => setShowOffcanvas(false)} user={user} />
     </div>
   );
-}; 
+};
+
+export default DoctorDashboard; 

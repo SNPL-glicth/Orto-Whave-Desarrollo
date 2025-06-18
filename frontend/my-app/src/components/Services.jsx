@@ -46,12 +46,12 @@ const Services = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center py-16"
+          className="text-center py-8 sm:py-16 px-4 sm:px-6"
         >
-          <h2 className="text-5xl font-bold mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-4">
             Servicios Especializados
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-600">
+          <p className="mt-2 sm:mt-4 max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-gray-600">
             Experiencia médica de clase mundial en ortopedia y rehabilitación
           </p>
         </motion.div>
@@ -64,7 +64,7 @@ const Services = () => {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.2 }}
-              className="relative group cursor-pointer h-[600px] overflow-hidden"
+              className="relative group cursor-pointer h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden"
               onClick={() => handleServiceClick(service)}
             >
               <div 
@@ -73,16 +73,16 @@ const Services = () => {
               />
               <div className="absolute inset-0 bg-white bg-opacity-10 transition-opacity duration-500 group-hover:bg-opacity-0" />
               
-              <div className="absolute inset-0 flex flex-col justify-end p-12 transition-transform duration-500 group-hover:translate-y-[-10px]">
-                <div className="bg-white bg-opacity-90 p-8 rounded-lg transform transition-all duration-500 group-hover:bg-opacity-95 shadow-lg">
-                  <p className="text-xl mb-2 text-gray-600">{service.subtitle}</p>
-                  <h3 className="text-4xl font-bold mb-4 text-black">{service.title}</h3>
-                  <p className="text-lg text-gray-800 opacity-90 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-8 md:p-12 transition-transform duration-500 group-hover:translate-y-[-10px]">
+                <div className="bg-white bg-opacity-90 p-4 sm:p-6 md:p-8 rounded-lg transform transition-all duration-500 group-hover:bg-opacity-95 shadow-lg">
+                  <p className="text-base sm:text-lg md:text-xl mb-1 sm:mb-2 text-gray-600">{service.subtitle}</p>
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-black">{service.title}</h3>
+                  <p className="text-sm sm:text-base md:text-lg text-gray-800 opacity-90 group-hover:opacity-100 transition-opacity duration-500">
                     {service.description}
                   </p>
-                  <button className="mt-6 inline-flex items-center text-lg font-semibold text-black hover:text-gray-700 transition-colors duration-300">
+                  <button className="mt-4 sm:mt-6 inline-flex items-center text-base sm:text-lg font-semibold text-black hover:text-gray-700 transition-colors duration-300">
                     DESCUBRIR
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-2 transition-transform duration-300 group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 ml-2 transition-transform duration-300 group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </button>

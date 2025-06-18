@@ -70,25 +70,25 @@ const Products = () => {
   });
 
   return (
-    <section id="productos" className="py-16 bg-white">
+    <section id="productos" className="py-8 sm:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">
             Productos Terapéuticos
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-4">
             Descubre nuestra línea exclusiva de productos terapéuticos diseñados para optimizar tu recuperación y bienestar
           </p>
         </div>
 
         {/* Filtros y búsqueda */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
-          <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 sm:mb-8 space-y-4 md:space-y-0">
+          <div className="flex flex-wrap gap-2 justify-center md:justify-start w-full md:w-auto">
             {categories.map(category => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
                   selectedCategory === category.id
                     ? 'bg-primary text-white'
                     : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
@@ -106,7 +106,7 @@ const Products = () => {
                 placeholder="Buscar productos"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full md:w-64 px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               {searchTerm && (
                 <button 
@@ -122,7 +122,7 @@ const Products = () => {
 
         {/* Cuadrícula de productos */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {filteredProducts.map(product => (
               <motion.div 
                 key={product.id} 
@@ -140,22 +140,22 @@ const Products = () => {
                     className="w-full h-full object-cover object-center"
                   />
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h3>
-                  <p className="text-gray-600 mb-4 line-clamp-2">{product.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-primary">
+                <div className="p-4 sm:p-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 sm:mb-2">{product.name}</h3>
+                  <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 line-clamp-2">{product.description}</p>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                    <span className="text-xl sm:text-2xl font-bold text-primary">
                       {formatPrice(product.price)}
                     </span>
                     <button
                       onClick={() => handleAddToCart(product)}
                       disabled={product.status === 'Agotado'}
-                      className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors
+                      className={`inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors w-full sm:w-auto
                         ${product.status === 'Agotado' 
                           ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                           : 'bg-primary text-white hover:bg-primary-dark'}`}
                     >
-                      <ShoppingCartIcon className="h-5 w-5 mr-2" />
+                      <ShoppingCartIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
                       {product.status === 'Agotado' ? 'Agotado' : 'Agregar al carrito'}
                     </button>
                   </div>
@@ -164,8 +164,8 @@ const Products = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No se encontraron productos que coincidan con tu búsqueda.</p>
+          <div className="text-center py-8 sm:py-12">
+            <p className="text-base sm:text-lg text-gray-500">No se encontraron productos que coincidan con tu búsqueda.</p>
           </div>
         )}
       </div>

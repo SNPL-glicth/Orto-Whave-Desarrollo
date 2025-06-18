@@ -99,46 +99,46 @@ const Contact = () => {
   };
 
   return (
-    <div id="contacto" className="container mx-auto px-4 py-12">
+    <div id="contacto" className="container mx-auto px-4 py-8 sm:py-12">
       <motion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
         variants={containerVariants}
-        className="text-center mb-12"
+        className="text-center mb-8 sm:mb-12"
       >
-        <motion.h2 variants={itemVariants} className="text-4xl font-bold text-gray-800 mb-4">
+        <motion.h2 variants={itemVariants} className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-2 sm:mb-4">
           Contáctanos
         </motion.h2>
-        <motion.p variants={itemVariants} className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <motion.p variants={itemVariants} className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
           Estamos aquí para resolver todas tus dudas. Completa el formulario y nos pondremos en contacto contigo lo antes posible.
         </motion.p>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-start">
         {/* Columna del formulario */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={containerVariants}
-          className="bg-white rounded-xl shadow-xl p-8"
+          className="bg-white rounded-xl shadow-xl p-4 sm:p-6 md:p-8"
         >
           {enviado && (
-            <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+            <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-green-100 border border-green-400 text-green-700 rounded text-sm sm:text-base">
               ¡Gracias por contactarnos! Te responderemos a la brevedad.
             </div>
           )}
 
           {error && (
-            <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-red-100 border border-red-400 text-red-700 rounded text-sm sm:text-base">
               Hubo un error al enviar el formulario. Por favor, intenta nuevamente.
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
-            <motion.div variants={itemVariants} className="mb-6">
-              <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-2">
+            <motion.div variants={itemVariants} className="mb-4 sm:mb-6">
+              <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Nombre completo*
               </label>
               <input
@@ -148,13 +148,13 @@ const Contact = () => {
                 value={formData.nombre}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                 placeholder="Tu nombre"
               />
             </motion.div>
 
-            <motion.div variants={itemVariants} className="mb-6">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <motion.div variants={itemVariants} className="mb-4 sm:mb-6">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Correo electrónico*
               </label>
               <input
@@ -164,13 +164,13 @@ const Contact = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                 placeholder="tucorreo@ejemplo.com"
               />
             </motion.div>
 
-            <motion.div variants={itemVariants} className="mb-6">
-              <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-2">
+            <motion.div variants={itemVariants} className="mb-4 sm:mb-6">
+              <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Teléfono
               </label>
               <input
@@ -179,13 +179,13 @@ const Contact = () => {
                 name="telefono"
                 value={formData.telefono}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                 placeholder="+57 300 123 4567"
               />
             </motion.div>
 
-            <motion.div variants={itemVariants} className="mb-6">
-              <label htmlFor="mensaje" className="block text-sm font-medium text-gray-700 mb-2">
+            <motion.div variants={itemVariants} className="mb-4 sm:mb-6">
+              <label htmlFor="mensaje" className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Mensaje*
               </label>
               <textarea
@@ -195,7 +195,7 @@ const Contact = () => {
                 value={formData.mensaje}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                 placeholder="¿En qué podemos ayudarte?"
               ></textarea>
             </motion.div>
@@ -203,7 +203,7 @@ const Contact = () => {
             <motion.div variants={itemVariants}>
               <button
                 type="submit"
-                className="w-full py-3 px-6 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105"
+                className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors duration-300 text-sm sm:text-base"
               >
                 Enviar mensaje
               </button>
@@ -211,27 +211,59 @@ const Contact = () => {
           </form>
         </motion.div>
 
-        {/* Columna del mapa */}
+        {/* Columna de información de contacto */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={containerVariants}
-          className="rounded-xl overflow-hidden shadow-xl h-full min-h-[400px]"
+          className="bg-white rounded-xl shadow-xl p-4 sm:p-6 md:p-8"
         >
-          <div className="h-full">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.4892783039814!2d-74.03347962498959!3d4.7047199957569935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9a9e6b33e5ed%3A0x4883a2cd10d7ead1!2sCl.%20134%20%237b-83%2C%20Bogot%C3%A1!5e0!3m2!1ses!2sco!4v1706036287729!5m2!1ses!2sco"
-              width="100%"
-              height="100%"
-              style={{ border: 0, minHeight: "100%", height: "100%" }}
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Ubicación Orto-White"
-              className="w-full h-full min-h-[400px]"
-            ></iframe>
+          <motion.div variants={itemVariants} className="mb-6 sm:mb-8">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">
+              Información de contacto
+            </h3>
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex items-start">
+                <MapPinIcon className="h-6 w-6 text-primary mt-1" />
+                <div className="ml-3">
+                  <h4 className="text-sm sm:text-base font-medium text-gray-800">Dirección</h4>
+                  <p className="text-sm sm:text-base text-gray-600 mt-1">
+                    Calle 123 #45-67, Bogotá, Colombia
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <PhoneIcon className="h-6 w-6 text-primary mt-1" />
+                <div className="ml-3">
+                  <h4 className="text-sm sm:text-base font-medium text-gray-800">Teléfono</h4>
+                  <p className="text-sm sm:text-base text-gray-600 mt-1">
+                    +57 300 123 4567
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">
+              Horario de atención
+            </h3>
+            <div className="space-y-2 sm:space-y-3">
+              <div className="flex justify-between">
+                <span className="text-sm sm:text-base text-gray-600">Lunes - Viernes</span>
+                <span className="text-sm sm:text-base text-gray-800 font-medium">8:00 AM - 6:00 PM</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm sm:text-base text-gray-600">Sábados</span>
+                <span className="text-sm sm:text-base text-gray-800 font-medium">9:00 AM - 1:00 PM</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm sm:text-base text-gray-600">Domingos</span>
+                <span className="text-sm sm:text-base text-gray-800 font-medium">Cerrado</span>
+              </div>
           </div>
+          </motion.div>
         </motion.div>
       </div>
     </div>

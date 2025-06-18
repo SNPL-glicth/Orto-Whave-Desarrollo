@@ -1,7 +1,4 @@
 import api from './api';
-import axios from 'axios';
-
-const API_URL = 'http://localhost:3000/auth';
 
 export const authService = {
   async login(email, password) {
@@ -107,8 +104,18 @@ export const authService = {
   },
 
   async verifyCode(email, code) {
-    const response = await axios.post(`${API_URL}/verify`, { email, code });
-    return response.data;
+    try {
+      const response = await api.post('/auth/verify', { email, code });
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        throw new Error(error.response.data?.message || 'Error en la verificación');
+      } else if (error.request) {
+        throw new Error('No se pudo conectar con el servidor. Verifica tu conexión a internet.');
+      } else {
+        throw new Error('Error al procesar la solicitud: ' + error.message);
+      }
+    }
   },
 
   logout() {

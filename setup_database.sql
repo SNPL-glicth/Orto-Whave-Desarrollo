@@ -2,6 +2,17 @@
 CREATE DATABASE IF NOT EXISTS orto_whave_db;
 USE orto_whave_db;
 
+-- Eliminar tablas existentes en orden inverso a sus dependencias
+DROP TABLE IF EXISTS refresh_tokens;
+DROP TABLE IF EXISTS registros_medicos;
+DROP TABLE IF EXISTS historias_clinicas;
+DROP TABLE IF EXISTS citas;
+DROP TABLE IF EXISTS pacientes;
+DROP TABLE IF EXISTS doctores;
+DROP TABLE IF EXISTS especialidades;
+DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS roles;
+
 -- Crear tabla de roles
 CREATE TABLE roles (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -24,7 +35,10 @@ CREATE TABLE usuarios (
     telefono VARCHAR(20),
     direccion TEXT,
     rol_id INT NOT NULL,
+    is_verified BOOLEAN DEFAULT FALSE,
+    verification_code VARCHAR(6),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ultima_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (rol_id) REFERENCES roles(id)
 );
 
@@ -42,6 +56,7 @@ CREATE TABLE doctores (
     especialidad_id INT NOT NULL,
     numero_licencia VARCHAR(50) UNIQUE,
     años_experiencia INT,
+    estado ENUM('activo', 'inactivo') DEFAULT 'activo',
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (especialidad_id) REFERENCES especialidades(id)
 );
@@ -55,6 +70,7 @@ CREATE TABLE pacientes (
     grupo_sanguineo VARCHAR(5),
     alergias TEXT,
     antecedentes_medicos TEXT,
+    estado ENUM('activo', 'inactivo') DEFAULT 'activo',
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
@@ -65,9 +81,11 @@ CREATE TABLE citas (
     doctor_id INT NOT NULL,
     fecha_hora DATETIME NOT NULL,
     duracion INT DEFAULT 30, -- duración en minutos
-    estado ENUM('programada', 'completada', 'cancelada') DEFAULT 'programada',
+    estado ENUM('programada', 'completada', 'cancelada', 'reprogramada') DEFAULT 'programada',
     motivo TEXT,
     notas TEXT,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ultima_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (paciente_id) REFERENCES pacientes(id),
     FOREIGN KEY (doctor_id) REFERENCES doctores(id)
 );
@@ -95,15 +113,25 @@ CREATE TABLE registros_medicos (
     FOREIGN KEY (doctor_id) REFERENCES doctores(id)
 );
 
+-- Crear tabla de tokens de refresco
+CREATE TABLE refresh_tokens (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id INT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    fecha_expiracion TIMESTAMP NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
 -- Insertar especialidad de Ortodoncia
 INSERT INTO especialidades (nombre, descripcion) VALUES 
     ('Ortodoncia', 'Especialidad odontológica que estudia, previene y corrige las alteraciones del desarrollo, las formas de las arcadas dentarias y la posición de los maxilares.');
 
 -- Crear usuarios iniciales con contraseñas hasheadas (usando SHA2 por ahora, en producción usar bcrypt)
-INSERT INTO usuarios (email, password, nombre, apellido, rol_id) VALUES 
-    ('admin@ortowhave.com', SHA2('admin123', 256), 'Administrador', 'Principal', 1),
-    ('doctor@ortowhave.com', SHA2('doctor123', 256), 'Doctor', 'Principal', 2),
-    ('paciente@ortowhave.com', SHA2('paciente123', 256), 'Paciente', 'Principal', 3);
+INSERT INTO usuarios (email, password, nombre, apellido, rol_id, is_verified) VALUES 
+    ('admin@ortowhave.com', SHA2('admin123', 256), 'Administrador', 'Principal', 1, TRUE),
+    ('doctor@ortowhave.com', SHA2('doctor123', 256), 'Doctor', 'Principal', 2, TRUE),
+    ('paciente@ortowhave.com', SHA2('paciente123', 256), 'Paciente', 'Principal', 3, TRUE);
 
 -- Vincular el doctor con su información específica
 INSERT INTO doctores (usuario_id, especialidad_id, numero_licencia, años_experiencia)

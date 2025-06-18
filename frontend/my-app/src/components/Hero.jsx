@@ -53,7 +53,7 @@ const slides = [
   };
 
   return (
-    <div className="relative h-screen pt-16" id="inicio">
+    <div className="relative h-[calc(100vh-4rem)] sm:h-screen pt-16" id="inicio">
       <div className="absolute inset-0 top-16 overflow-hidden">
         <AnimatePresence initial={false}>
         <motion.div
@@ -74,27 +74,27 @@ const slides = [
         </AnimatePresence>
 
         {/* Contenido del slide */}
-        <div className="relative h-full flex items-center justify-center text-white px-4">
+        <div className="relative h-full flex items-center justify-center text-white px-4 sm:px-6">
           <motion.div
             key={`content-${currentSlide}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-            className="text-center max-w-4xl mx-auto"
+            className="text-center max-w-4xl mx-auto px-4 sm:px-6"
             >
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-2 sm:mb-4">
               {slides[currentSlide].title}
             </h1>
-            <h2 className="text-xl md:text-2xl font-semibold mb-4 text-primary">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-4 text-primary">
               {slides[currentSlide].subtitle}
               </h2>
-            <p className="text-lg md:text-xl mb-8">
+            <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8">
               {slides[currentSlide].description}
             </p>
             <a
               href="#contacto"
-              className="inline-block bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-lg transition-colors duration-300"
+              className="inline-block bg-primary hover:bg-primary-dark text-white font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors duration-300 text-sm sm:text-base"
             >
               Agenda tu Cita
             </a>
@@ -102,12 +102,12 @@ const slides = [
         </div>
 
         {/* Controles del carrusel */}
-        <div className="absolute bottom-8 left-0 right-0 flex justify-center space-x-4">
+        <div className="absolute bottom-4 sm:bottom-8 left-0 right-0 flex justify-center space-x-3 sm:space-x-4">
         {slides.map((_, index) => (
           <button
               key={index}
               onClick={() => goToSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
                 currentSlide === index ? 'bg-primary scale-125' : 'bg-white opacity-50 hover:opacity-75'
             }`}
           />
@@ -117,15 +117,15 @@ const slides = [
         {/* Botones de navegación */}
       <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300"
+          className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-1.5 sm:p-2 transition-all duration-300"
       >
-          <ChevronLeftIcon className="h-8 w-8 text-white" />
+          <ChevronLeftIcon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
       </button>
       <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300"
+          className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-1.5 sm:p-2 transition-all duration-300"
       >
-          <ChevronRightIcon className="h-8 w-8 text-white" />
+          <ChevronRightIcon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
       </button>
       </div>
     </div>

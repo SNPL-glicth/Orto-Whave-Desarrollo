@@ -1,4 +1,5 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
+import { Column } from 'typeorm';
 
 export class InitialSetup1709942400000 implements MigrationInterface {
     name = 'InitialSetup1709942400000';
@@ -36,6 +37,8 @@ export class InitialSetup1709942400000 implements MigrationInterface {
                 direccion TEXT,
                 rol_id INT NOT NULL,
                 fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                isVerified BOOLEAN NOT NULL DEFAULT false,
+                verificationCode VARCHAR(10),
                 UNIQUE INDEX IDX_email_unico (email),
                 PRIMARY KEY (id),
                 FOREIGN KEY (rol_id) REFERENCES roles(id)

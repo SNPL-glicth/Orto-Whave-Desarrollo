@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
         
         // Determinar la URL de redirección basada en el rol
         let redirectUrl = '/dashboard';
-        const userRole = response.user.rol?.toLowerCase();
+        const userRole = response.user.role?.toLowerCase();
         
         if (userRole === 'administrador') {
           redirectUrl = '/dashboard/admin';
